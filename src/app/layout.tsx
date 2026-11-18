@@ -77,13 +77,6 @@ export const metadata: Metadata = {
       "text/plain": `${siteConfig.url}/llms.txt`,
     },
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/brand/brandorbit-icon.png", type: "image/png" },
-    ],
-    apple: [{ url: "/brand/brandorbit-icon.png", type: "image/png" }],
-  },
   manifest: "/manifest.webmanifest",
   openGraph: {
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
