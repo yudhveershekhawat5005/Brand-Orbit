@@ -3,17 +3,51 @@ import { PageHero } from "@/components/shared/PageHero";
 import { Container } from "@/components/shared/Container";
 import { Reveal } from "@/components/shared/Reveal";
 import { Button } from "@/components/shared/Button";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  getBreadcrumbSchema,
+  getLeadershipSchema,
+  getWebPageSchema,
+} from "@/lib/schema";
 import { siteConfig } from "@/data/site";
 
-export const metadata: Metadata = {
+const PAGE_DESCRIPTION =
+  "BrandOrbit Group is a founder-led, multi-industry business group in Jaipur, India, bringing together six specialised divisions and a venture-building arm under one identity.";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "About Us",
-  description:
-    "BrandOrbit Group is a founder-led, multi-industry business group bringing together specialised divisions and ventures under one identity.",
-};
+  description: PAGE_DESCRIPTION,
+  path: "/about",
+  image: "/images/about-team-unity.jpg",
+  imageAlt: "BrandOrbit Group leadership and team",
+  keywords: [
+    "About BrandOrbit Group",
+    "Lalit Kumawat",
+    "Jitendra Kumar Kumawat",
+    "business group Jaipur",
+    "venture building India",
+  ],
+});
 
 export default function AboutPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          getWebPageSchema({
+            type: "AboutPage",
+            path: "/about",
+            name: `About Us — ${siteConfig.name}`,
+            description: PAGE_DESCRIPTION,
+          }),
+          getBreadcrumbSchema([
+            { name: "Home", path: "" },
+            { name: "About Us", path: "/about" },
+          ]),
+          getLeadershipSchema(),
+        ]}
+      />
       <PageHero
         eyebrow="About Us"
         title="A Founder-Led Group, Built to Grow."

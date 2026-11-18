@@ -3,16 +3,46 @@ import Link from "next/link";
 import { PageHero } from "@/components/shared/PageHero";
 import { Container } from "@/components/shared/Container";
 import { Reveal } from "@/components/shared/Reveal";
+import { FaqSection } from "@/components/shared/FaqSection";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  getBreadcrumbSchema,
+  getVerticalsItemListSchema,
+  getWebPageSchema,
+} from "@/lib/schema";
+import { siteConfig } from "@/data/site";
 import { verticals } from "@/data/verticals";
+import { servicesFaqs } from "@/data/faqs";
 
-export const metadata: Metadata = {
+const PAGE_DESCRIPTION =
+  "Explore BrandOrbit Group's services across all six business verticals: marketing & growth, technology & AI automation, education, media & creative, business consulting, and venture building.";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Services",
-  description: "Explore BrandOrbit Group's services across all six business verticals.",
-};
+  description: PAGE_DESCRIPTION,
+  path: "/services",
+  keywords: verticals.flatMap((v) => [v.name, ...v.capabilities]),
+});
 
 export default function ServicesPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          getWebPageSchema({
+            type: "WebPage",
+            path: "/services",
+            name: `Services — ${siteConfig.name}`,
+            description: PAGE_DESCRIPTION,
+          }),
+          getBreadcrumbSchema([
+            { name: "Home", path: "" },
+            { name: "Services", path: "/services" },
+          ]),
+          getVerticalsItemListSchema(),
+        ]}
+      />
       <PageHero
         eyebrow="Services"
         title="Everything Businesses Need to Move Forward."
@@ -49,6 +79,14 @@ export default function ServicesPage() {
           ))}
         </Container>
       </section>
+
+      <FaqSection
+        eyebrow="Services FAQ"
+        title="Questions About Our Services."
+        description="Direct answers on how BrandOrbit's six verticals work individually or together."
+        items={servicesFaqs}
+        surface="bg-surface"
+      />
     </>
   );
 }

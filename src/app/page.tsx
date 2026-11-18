@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import MetroHero from "@/components/ui/scroll-locked-video-hero";
 import { Hero } from "@/components/home/Hero";
 import { About } from "@/components/home/About";
@@ -10,11 +11,30 @@ import { VentureBuilding } from "@/components/home/VentureBuilding";
 import { Partnerships } from "@/components/home/Partnerships";
 import { Insights } from "@/components/home/Insights";
 import { Newsletter } from "@/components/home/Newsletter";
+import { FaqSection } from "@/components/shared/FaqSection";
 import { FinalCta } from "@/components/home/FinalCta";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getWebPageSchema } from "@/lib/schema";
+import { homeFaqs } from "@/data/faqs";
+import { siteConfig } from "@/data/site";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default function Home() {
   return (
     <>
+      <JsonLd
+        data={getWebPageSchema({
+          type: "WebPage",
+          path: "",
+          name: `${siteConfig.name} — ${siteConfig.tagline}`,
+          description: siteConfig.description,
+        })}
+      />
       <MetroHero
         title="Open the door to endless opportunities"
         subtitle="BrandOrbit Group is a business consulting and growth partner, bringing strategy, technology and marketing expertise to help you build, scale and launch."
@@ -33,6 +53,7 @@ export default function Home() {
       <Partnerships />
       <Insights />
       <Newsletter />
+      <FaqSection items={homeFaqs} surface="bg-surface" />
       <FinalCta />
     </>
   );

@@ -3,17 +3,44 @@ import Link from "next/link";
 import { PageHero } from "@/components/shared/PageHero";
 import { Container } from "@/components/shared/Container";
 import { Reveal } from "@/components/shared/Reveal";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  getBreadcrumbSchema,
+  getVerticalsItemListSchema,
+  getWebPageSchema,
+} from "@/lib/schema";
+import { siteConfig } from "@/data/site";
 import { verticals } from "@/data/verticals";
 
-export const metadata: Metadata = {
+const PAGE_DESCRIPTION =
+  "Six specialised business verticals under one unified group — marketing & growth, technology & AI, education, media & creative, business consulting, and venture building.";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Our Businesses",
-  description:
-    "Six specialised business verticals under one unified group — marketing, technology, education, media, consulting and venture building.",
-};
+  description: PAGE_DESCRIPTION,
+  path: "/businesses",
+  keywords: verticals.map((v) => v.name),
+});
 
 export default function BusinessesPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          getWebPageSchema({
+            type: "CollectionPage",
+            path: "/businesses",
+            name: `Our Businesses — ${siteConfig.name}`,
+            description: PAGE_DESCRIPTION,
+          }),
+          getBreadcrumbSchema([
+            { name: "Home", path: "" },
+            { name: "Our Businesses", path: "/businesses" },
+          ]),
+          getVerticalsItemListSchema(),
+        ]}
+      />
       <PageHero
         eyebrow="Our Businesses"
         title="Six Verticals. One Vision."

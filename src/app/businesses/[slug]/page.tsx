@@ -4,6 +4,15 @@ import { PageHero } from "@/components/shared/PageHero";
 import { Container } from "@/components/shared/Container";
 import { Reveal } from "@/components/shared/Reveal";
 import { Button } from "@/components/shared/Button";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  getBreadcrumbSchema,
+  getHowToSchema,
+  getVerticalServiceSchema,
+  getWebPageSchema,
+} from "@/lib/schema";
+import { siteConfig } from "@/data/site";
 import { verticals, getVerticalBySlug } from "@/data/verticals";
 import { processSteps } from "@/data/process";
 import { portfolioProjects } from "@/data/portfolio";
@@ -16,10 +25,14 @@ export async function generateMetadata(props: PageProps<"/businesses/[slug]">): 
   const { slug } = await props.params;
   const vertical = getVerticalBySlug(slug);
   if (!vertical) return {};
-  return {
+  return buildPageMetadata({
     title: vertical.name,
     description: vertical.description,
-  };
+    path: `/businesses/${vertical.slug}`,
+    image: vertical.cardImage,
+    imageAlt: `${vertical.name} — ${siteConfig.name}`,
+    keywords: [vertical.name, vertical.shortName, ...vertical.capabilities, siteConfig.name],
+  });
 }
 
 export default async function VerticalPage(props: PageProps<"/businesses/[slug]">) {
@@ -31,6 +44,23 @@ export default async function VerticalPage(props: PageProps<"/businesses/[slug]"
 
   return (
     <>
+      <JsonLd
+        data={[
+          getWebPageSchema({
+            type: "WebPage",
+            path: `/businesses/${vertical.slug}`,
+            name: `${vertical.name} — ${siteConfig.name}`,
+            description: vertical.description,
+          }),
+          getBreadcrumbSchema([
+            { name: "Home", path: "" },
+            { name: "Our Businesses", path: "/businesses" },
+            { name: vertical.name, path: `/businesses/${vertical.slug}` },
+          ]),
+          getVerticalServiceSchema(vertical),
+          getHowToSchema(),
+        ]}
+      />
       <PageHero eyebrow={`Business Vertical · ${vertical.index}`} title={vertical.name} description={vertical.tagline} />
 
       <section className="bg-bg py-20 sm:py-28">

@@ -3,15 +3,42 @@ import { PageHero } from "@/components/shared/PageHero";
 import { Container } from "@/components/shared/Container";
 import { Reveal } from "@/components/shared/Reveal";
 import { CareersForm } from "@/components/shared/CareersForm";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import { getBreadcrumbSchema, getWebPageSchema } from "@/lib/schema";
+import { siteConfig } from "@/data/site";
 
-export const metadata: Metadata = {
+const PAGE_DESCRIPTION =
+  "Join BrandOrbit Group or collaborate with us across marketing, technology & AI, education, media, business consulting, and venture building.";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Careers & Collaborate",
-  description: "Join BrandOrbit Group or collaborate with us across our business verticals.",
-};
+  description: PAGE_DESCRIPTION,
+  path: "/careers",
+  keywords: [
+    "BrandOrbit careers",
+    "jobs Jaipur",
+    "collaborate BrandOrbit Group",
+  ],
+});
 
 export default function CareersPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          getWebPageSchema({
+            type: "WebPage",
+            path: "/careers",
+            name: `Careers & Collaborate — ${siteConfig.name}`,
+            description: PAGE_DESCRIPTION,
+          }),
+          getBreadcrumbSchema([
+            { name: "Home", path: "" },
+            { name: "Careers & Collaborate", path: "/careers" },
+          ]),
+        ]}
+      />
       <PageHero
         eyebrow="Careers & Collaborate"
         title="Grow With BrandOrbit."

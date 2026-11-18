@@ -2,16 +2,44 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/shared/PageHero";
 import { Container } from "@/components/shared/Container";
 import { Reveal } from "@/components/shared/Reveal";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  getBreadcrumbSchema,
+  getIndustriesItemListSchema,
+  getWebPageSchema,
+} from "@/lib/schema";
+import { siteConfig } from "@/data/site";
 import { industries, industriesNotice } from "@/data/industries";
 
-export const metadata: Metadata = {
+const PAGE_DESCRIPTION =
+  "BrandOrbit Group partners with startups, SMBs, education providers, consumer & D2C brands, professional services firms, and founders.";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Industries We Serve",
-  description: "The kinds of businesses and organisations BrandOrbit Group works with.",
-};
+  description: PAGE_DESCRIPTION,
+  path: "/industries",
+  keywords: industries.map((i) => i.name),
+});
 
 export default function IndustriesPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          getWebPageSchema({
+            type: "CollectionPage",
+            path: "/industries",
+            name: `Industries We Serve — ${siteConfig.name}`,
+            description: PAGE_DESCRIPTION,
+          }),
+          getBreadcrumbSchema([
+            { name: "Home", path: "" },
+            { name: "Industries We Serve", path: "/industries" },
+          ]),
+          getIndustriesItemListSchema(),
+        ]}
+      />
       <PageHero
         eyebrow="Industries We Serve"
         title="Built for Businesses in Motion."

@@ -2,16 +2,44 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/shared/PageHero";
 import { Container } from "@/components/shared/Container";
 import { Reveal } from "@/components/shared/Reveal";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import { getBreadcrumbSchema, getWebPageSchema } from "@/lib/schema";
+import { siteConfig } from "@/data/site";
 import { insightArticles } from "@/data/insights";
 
-export const metadata: Metadata = {
+const PAGE_DESCRIPTION =
+  "Ideas and perspectives on business strategy, technology, AI, marketing, and entrepreneurship from BrandOrbit Group.";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Insights",
-  description: "Ideas on business, technology, AI, marketing and entrepreneurship from BrandOrbit Group.",
-};
+  description: PAGE_DESCRIPTION,
+  path: "/insights",
+  keywords: [
+    "BrandOrbit insights",
+    "business strategy articles",
+    "AI automation insights",
+    "brand growth perspectives",
+  ],
+});
 
 export default function InsightsPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          getWebPageSchema({
+            type: "CollectionPage",
+            path: "/insights",
+            name: `Insights — ${siteConfig.name}`,
+            description: PAGE_DESCRIPTION,
+          }),
+          getBreadcrumbSchema([
+            { name: "Home", path: "" },
+            { name: "Insights", path: "/insights" },
+          ]),
+        ]}
+      />
       <PageHero
         eyebrow="Insights"
         title="Ideas on Growth, Technology & Business."

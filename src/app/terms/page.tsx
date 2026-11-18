@@ -1,15 +1,37 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/shared/PageHero";
 import { Container } from "@/components/shared/Container";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import { getBreadcrumbSchema, getWebPageSchema } from "@/lib/schema";
 import { siteConfig } from "@/data/site";
 
-export const metadata: Metadata = {
+const PAGE_DESCRIPTION =
+  "Terms & Conditions governing use of the BrandOrbit Group website (brandorbitgroup.in).";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Terms & Conditions",
-};
+  description: PAGE_DESCRIPTION,
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          getWebPageSchema({
+            type: "WebPage",
+            path: "/terms",
+            name: `Terms & Conditions — ${siteConfig.name}`,
+            description: PAGE_DESCRIPTION,
+          }),
+          getBreadcrumbSchema([
+            { name: "Home", path: "" },
+            { name: "Terms & Conditions", path: "/terms" },
+          ]),
+        ]}
+      />
       <PageHero eyebrow="Legal" title="Terms & Conditions" />
       <section className="bg-bg py-16 sm:py-20">
         <Container className="max-w-3xl">

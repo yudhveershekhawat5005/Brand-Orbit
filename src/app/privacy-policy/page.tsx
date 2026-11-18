@@ -1,15 +1,37 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/shared/PageHero";
 import { Container } from "@/components/shared/Container";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import { getBreadcrumbSchema, getWebPageSchema } from "@/lib/schema";
 import { siteConfig } from "@/data/site";
 
-export const metadata: Metadata = {
+const PAGE_DESCRIPTION =
+  "Privacy Policy for BrandOrbit Group describing how enquiry, partnership, and careers information submitted through brandorbitgroup.in is collected and used.";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
-};
+  description: PAGE_DESCRIPTION,
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          getWebPageSchema({
+            type: "WebPage",
+            path: "/privacy-policy",
+            name: `Privacy Policy — ${siteConfig.name}`,
+            description: PAGE_DESCRIPTION,
+          }),
+          getBreadcrumbSchema([
+            { name: "Home", path: "" },
+            { name: "Privacy Policy", path: "/privacy-policy" },
+          ]),
+        ]}
+      />
       <PageHero eyebrow="Legal" title="Privacy Policy" />
       <section className="bg-bg py-16 sm:py-20">
         <Container className="max-w-3xl">
