@@ -182,6 +182,7 @@ export function KineticMatrix({
 
         let animId = 0;
         let lastTime = performance.now();
+        let running = false;
 
         const render = (now: number) => {
             const dt = Math.min((now - lastTime) / 1000, 0.033);
@@ -398,8 +399,30 @@ export function KineticMatrix({
             animId = requestAnimationFrame(render);
         };
 
-        animId = requestAnimationFrame(render);
-        return () => cancelAnimationFrame(animId);
+        // Only simulate while the canvas is on screen. Left running it burned
+        // main-thread time every frame while the user scrolled through the
+        // scroll-scrub hero above it, which made that section lag.
+        const start = () => {
+            if (running) return;
+            running = true;
+            lastTime = performance.now();
+            animId = requestAnimationFrame(render);
+        };
+        const stop = () => {
+            running = false;
+            cancelAnimationFrame(animId);
+        };
+
+        const observer = new IntersectionObserver(
+            ([entry]) => (entry.isIntersecting ? start() : stop()),
+            { rootMargin: '100px 0px' }
+        );
+        observer.observe(canvas);
+
+        return () => {
+            observer.disconnect();
+            stop();
+        };
     }, [isDarkMode]);
 
     // Mouse handlers

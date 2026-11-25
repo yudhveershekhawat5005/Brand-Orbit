@@ -17,6 +17,21 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  // Hero scrub frames are versioned by folder (/hero-frames/v1), so they can be
+  // cached forever. Without this, files in /public revalidate on every visit.
+  headers() {
+    return [
+      {
+        source: "/hero-frames/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
   redirects() {
     return NON_CANONICAL_HOSTS.map((host) => ({
       source: "/:path*",
